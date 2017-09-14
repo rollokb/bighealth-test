@@ -81,13 +81,17 @@ class DiarySchema(Schema):
 
     @validates_schema
     def validate_date(self, data):
-        diaries = db_session.query(Diary).filter(
-            Diary.date == data['date'],
-            Diary.user_id == self.context['user_id']
-        )
+        if 'date' in data:
+            diaries = db_session.query(Diary).filter(
+                Diary.date == data['date'],
+                Diary.user_id == self.context['user_id']
+            )
 
-        if self.context.get('id'):
-            diaries = diaries.filter(Diary.id != self.context['id'])
+            if self.context.get('id'):
+                diaries = diaries.filter(Diary.id != self.context['id'])
 
-        if diaries.count():
-            raise ValidationError('No More Than One Diary For a User Per Day')
+            if diaries.count():
+                raise ValidationError(
+                    'No More Than One Diary For a User Per Day',
+                    field_names=['date']
+                )
