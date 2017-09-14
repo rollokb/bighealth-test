@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 
 from app.flask import app
@@ -9,4 +11,4 @@ if __name__ == '__main__':
         init_db()
         fixtures()
 
-    app.run()
+    app.run(port=5000, host='0.0.0.0')
